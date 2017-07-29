@@ -1,0 +1,10 @@
+因为考驾照的原因，项目没有完成，只完成了大部分的后端代码和小量的前端代码。
+项目使用框架：
+前端——Bootstrap及其Validator工具
+后端——Java后端 SpringMVC,Spring,mybatis
+数据库——Mysql与Redis
+
+数据库脚本文件:在\src\main\sql\下的init.sql(建表脚本),data.sql(数据脚本)
+jdbc配置文件:在\src\main\resources下的jdbc.properties
+redis配置文件:在\src\main\resources下的redis.properties
+mybatis配置文件:在\src\main\resources下的mybatis-config.xml
