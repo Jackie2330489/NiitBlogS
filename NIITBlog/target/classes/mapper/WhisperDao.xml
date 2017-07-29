@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.WhisperDao">
+    <resultMap id="whisperRM" type="entity.Whisper">
+        <id column="w_id" property="whisperId"/>
+        <result column="w_senderId" property="senderId"/>
+        <result column="w_catcherId" property="catcherId"/>
+        <result column="w_msg" property="msg"/>
+        <result column="w_time" property="time"/>
+    </resultMap>
+    <select id="getWhispers" resultMap="whisperRM">
+        select * from Whisper
+        where (w_senderId=#{studentAId} and w_catcherId=#{studentBId}) or (w_senderId=#{studentBId} and w_catcherId=#{studentAId})
+        order by w_time desc limit #{offset},#{limit};
+    </select>
+</mapper>

@@ -1,0 +1,171 @@
+#数据库初始化脚本
+#(1)创建数据库
+CREATE DATABASE blog;
+USE blog;
+#(2)创建表
+#学生表
+CREATE TABLE student(
+s_id VARCHAR(12) NOT NULL COMMENT '登录id',
+s_shadow VARCHAR(20) NOT NULL COMMENT '密码',
+s_name VARCHAR(10) NOT NULL COMMENT '姓名',
+s_sex INT DEFAULT 0 COMMENT '性别 1-男 2-女 默认为0',
+s_birthday TIMESTAMP COMMENT '生日',
+s_qq VARCHAR(12) COMMENT 'QQ',
+s_grade INT DEFAULT 0 COMMENT '年级',
+s_spec VARCHAR(10) COMMENT '专业',
+s_class INT DEFAULT 0 COMMENT '班级',
+s_intro VARCHAR(200) COMMENT '简介',
+s_money INT NOT NULL DEFAULT 0 COMMENT '余额',
+-- s_likes INT NOT NULL DEFAULT 0 COMMENT '文章被赞总数',
+-- s_donates INT NOT NULL DEFAULT 0 COMMENT '已打赏总金额',
+-- s_earns INT NOT NULL DEFAULT 0 COMMENT '收到的打赏总金额',
+-- s_following INT NOT NULL DEFAULT 0 COMMENT '关注数量',
+-- s_followers INT NOT NULL DEFAULT 0 COMMENT '粉丝数量',
+-- s_articles INT NOT NULL DEFAULT 0 COMMENT '文章数量',
+-- s_notifications INT NOT NULL DEFAULT 0 COMMENT '未读消息数量',
+PRIMARY KEY (s_id),
+KEY idx_s_name(s_name),
+KEY idx_s_grade(s_grade),
+KEY idx_s_spec(s_spec),
+KEY idx_s_class(s_class)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+#留言表
+CREATE TABLE leaveMsg(
+l_id BIGINT NOT NULL AUTO_INCREMENT COMMENT '留言自增id',
+l_pageOwnerId VARCHAR(12) NOT NULL COMMENT '留言板主人id',
+l_fromWhoId VARCHAR(12) NOT NULL COMMENT '评价人id',
+l_fromWhoName VARCHAR(10) NOT NULL COMMENT '评价人姓名',
+l_toWhoId VARCHAR(12) COMMENT '被评价人id',
+l_toWhoName VARCHAR(10) COMMENT '被评价人姓名',
+l_msg VARCHAR(200) NOT NULL DEFAULT 'GOOD!' COMMENT '评价内容',
+l_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '留言时间',
+PRIMARY KEY (l_id),
+KEY idx_l_time(l_time)
+)ENGINE=MyISAM AUTO_INCREMENT=1000 DEFAULT CHARSET=utf8;
+#私信表
+CREATE TABLE whisper(
+w_id BIGINT NOT NULL AUTO_INCREMENT COMMENT '私信自增id',
+w_senderId VARCHAR(12) NOT NULL COMMENT '发送人id',
+w_catcherId VARCHAR(12) NOT NULL COMMENT '接收人id',
+w_msg VARCHAR(200) NOT NULL DEFAULT '真的？为什么？你真厉害！' COMMENT '私信内容',
+w_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '私信时间',
+PRIMARY KEY (w_id)
+)ENGINE=MyISAM AUTO_INCREMENT=1000 DEFAULT CHARSET=utf8;
+#草稿表
+CREATE TABLE draft(
+d_id BIGINT NOT NULL AUTO_INCREMENT COMMENT '草稿自增id',
+d_stuId VARCHAR(12) NOT NULL COMMENT '草稿创建人id',
+d_title VARCHAR(20) NOT NULL DEFAULT '草稿' COMMENT '标题',
+d_draft VARCHAR(3000) NOT NULL DEFAULT '草稿内容为空' COMMENT '草稿内容',
+d_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+PRIMARY KEY (d_id)
+)ENGINE=MyISAM AUTO_INCREMENT=1000 DEFAULT CHARSET=utf8;
+#关注表
+CREATE TABLE follows(
+f_fromWhoId VARCHAR(12) NOT NULL COMMENT '关注人id',
+f_fromWhoName VARCHAR(10) NOT NULL COMMENT '关注人姓名',
+f_toWhoId VARCHAR(12) NOT NULL COMMENT '被关注人id',
+f_toWhoName VARCHAR(10) NOT NULL COMMENT '被关注人姓名',
+f_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '关注时间',
+PRIMARY KEY (f_fromWhoId,f_toWhoId)
+)ENGINE=MyISAM AUTO_INCREMENT=1000 DEFAULT CHARSET=utf8;
+#通知表
+CREATE TABLE notification(
+n_id BIGINT NOT NULL AUTO_INCREMENT COMMENT '通知自增id',
+n_fromWhoId VARCHAR(12) NOT NULL COMMENT '通知人id',
+n_fromWhoName VARCHAR(10) NOT NULL COMMENT '通知人姓名',
+n_toWhoId VARCHAR(12) NOT NULL COMMENT '被通知人id',
+n_toWhoName VARCHAR(10) NOT NULL COMMENT '被通知人姓名',
+n_msg VARCHAR(12) NOT NULL COMMENT '通知内容',
+n_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '通知时间',
+n_status INT NOT NULL DEFAULT 0 COMMENT '通知状态 0-已读 1-关注 2-点赞 3-评论 4-打赏 5-私信 6-留言',
+PRIMARY KEY (n_id),
+KEY idx_n_fromWhoId(n_fromWhoId),
+KEY idx_n_toWhoId(n_toWhoId)
+)ENGINE=MyISAM AUTO_INCREMENT=1000 DEFAULT CHARSET=utf8;
+#博文表
+CREATE TABLE article(
+a_id BIGINT NOT NULL AUTO_INCREMENT COMMENT '博文id',
+a_authorId VARCHAR(12) NOT NULL COMMENT '作者id',
+a_authorName VARCHAR(10) NOT NULL COMMENT '作者姓名',
+a_title VARCHAR(30) NOT NULL COMMENT '文章标题',
+a_body  VARCHAR(3000) NOT NULL COMMENT '文章内容',
+-- a_likes INT NOT NULL DEFAULT 0 COMMENT '被赞数',
+-- a_donateSum INT NOT NULL DEFAULT 0 COMMENT '收到打赏总额',
+a_status INT NOT NULL DEFAULT 1 COMMENT '文章状态 1-已发布 0-已删除',
+a_published TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '发表时间',
+a_lastModify TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '最后修改时间',
+PRIMARY KEY (a_id),
+KEY idx_a_authorId(a_authorId),
+KEY ide_a_title(a_title),
+KEY idx_a_lastModify(a_lastModify)
+)ENGINE=InnoDB AUTO_INCREMENT=1000 DEFAULT CHARSET=utf8;
+#点赞表
+CREATE TABLE likesTable(
+like_likerId VARCHAR(12) NOT NULL COMMENT '点赞人id',
+like_likerName VARCHAR(10) NOT NULL COMMENT '点赞人姓名',
+like_belikedId BIGINT NOT NULL COMMENT '被点赞文章id',
+like_belikedAuthor VARCHAR(12) NOT NULL COMMENT '文章作者id',
+like_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '点赞时间',
+PRIMARY KEY (like_likerId,like_belikedId)
+)ENGINE=MyISAM DEFAULT CHARSET=utf8;
+#评论表
+CREATE TABLE comment(
+c_id BIGINT NOT NULL AUTO_INCREMENT COMMENT '评论id',
+c_articleId BIGINT NOT NULL COMMENT '文章id',
+c_fromWhoId VARCHAR(12) NOT NULL COMMENT '评论人id',
+c_fromWhoName VARCHAR(10) NOT NULL COMMENT '评论人姓名',
+c_toWhoId VARCHAR(12) COMMENT '被评论人id',
+c_toWhoName VARCHAR(10) COMMENT '被评论人姓名',
+c_text VARCHAR(12) NOT NULL COMMENT '评论内容',
+c_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '评论时间',
+PRIMARY KEY (c_id)
+)ENGINE=MyISAM AUTO_INCREMENT=1000 DEFAULT CHARSET=utf8;
+#打赏表
+CREATE TABLE donate(
+don_id BIGINT NOT NULL AUTO_INCREMENT COMMENT '打赏id',
+don_donatorId VARCHAR(12) NOT NULL COMMENT '打赏人id',
+don_donatorName VARCHAR(10) NOT NULL COMMENT '打赏人姓名',
+don_earnArticle BIGINT NOT NULL COMMENT '被打赏文章id',
+don_earnerId VARCHAR(12) NOT NULL COMMENT '被打赏人id',
+don_money INT NOT NULL COMMENT '打赏金额',
+don_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '打赏时间',
+PRIMARY KEY (don_id),
+KEY idx_don_donatorId(don_donatorId),
+KEY idx_don_earnerId(don_earnerId)
+)ENGINE=MyISAM AUTO_INCREMENT=1000 DEFAULT CHARSET=utf8;
+#标签表
+CREATE TABLE tag(
+ta_id BIGINT NOT NULL COMMENT '文章id',
+t_name VARCHAR(30) NOT NULL COMMENT '标签名',
+PRIMARY KEY (ta_id,t_name)
+)ENGINE=MyISAM DEFAULT CHARSET=utf8;
+#敏感词表
+CREATE TABLE sensitiveWord(
+sw_id BIGINT NOT NULL AUTO_INCREMENT COMMENT '表id',
+sw_name VARCHAR(10) NOT NULL COMMENT '敏感词',
+PRIMARY KEY (sw_id)
+)ENGINE=MyISAM AUTO_INCREMENT=1000 DEFAULT CHARSET=utf8;
+#推荐表
+CREATE TABLE hotArticle(
+ha_articleId BIGINT NOT NULL COMMENT ' 推荐文id',
+ha_status INT NOT NULL DEFAULT 1 COMMENT '状态 1-推荐 0-未推荐',
+PRIMARY KEY (ha_articleId)
+)ENGINE=MyISAM DEFAULT CHARSET=utf8;
+#头像表
+CREATE TABLE headImg(
+hi_studentId VARCHAR(12) NOT NULL COMMENT '头像所属者',
+hi_bigPath VARCHAR(200) NOT NULL COMMENT '大头像',
+hi_smallPath VARCHAR(200) NOT NULL COMMENT '小头像',
+PRIMARY KEY (hi_studentId)
+)ENGINE=MyISAM DEFAULT CHARSET=utf8;
+#文件表
+CREATE TABLE articleFile(
+af_id BIGINT NOT NULL AUTO_INCREMENT COMMENT '文件id',
+af_articleId BIGINT NOT NULL COMMENT '文章id',
+af_storeName VARCHAR(100) NOT NULL COMMENT '文件存储名',
+af_realName VARCHAR(100) NOT NULL COMMENT '文件原名',
+af_contentType VARCHAR(100) NOT NULL COMMENT '文件类型',
+PRIMARY KEY (af_id),
+KEY (af_articleId)
+)ENGINE=MyISAM AUTO_INCREMENT=1000 DEFAULT CHARSET=utf8;

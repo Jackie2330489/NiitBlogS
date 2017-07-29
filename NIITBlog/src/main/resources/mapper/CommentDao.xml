@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.CommentDao">
+    <resultMap id="commentRM" type="entity.Comment">
+        <id column="c_id" property="commentId"/>
+        <result column="c_articleId" property="articleId"/>
+        <result column="c_fromWhoId" property="fromWhoId"/>
+        <result column="c_fromWhoName" property="fromWhoName"/>
+        <result column="c_toWhoId" property="toWhoId"/>
+        <result column="c_toWhoName" property="toWhoName"/>
+        <result column="c_text" property="text"/>
+        <result column="c_time" property="time"/>
+    </resultMap>
+    <select id="getNumOfComments" resultType="Integer">
+        select count(*) from Comment where c_articleId=#{articleId};
+    </select>
+    <select id="getComments" resultMap="commentRM">
+        select * from Comment where c_articleId=#{articleId} order by c_time asc;
+    </select>
+</mapper>

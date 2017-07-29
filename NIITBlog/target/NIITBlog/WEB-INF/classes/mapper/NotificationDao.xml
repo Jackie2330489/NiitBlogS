@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.NotificationDao">
+    <resultMap id="notiRM" type="entity.Notification">
+        <id column="n_id" property="notiId"/>
+        <result column="n_fromWhoId" property="fromWhoId"/>
+        <result column="n_fromWhoName" property="fromWhoName"/>
+        <result column="n_toWhoId" property="toWhoId"/>
+        <result column="n_toWhoName" property="toWhoName"/>
+        <result column="n_msg" property="msg"/>
+        <result column="n_time" property="time"/>
+        <result column="n_status" property="status"/>
+    </resultMap>
+    <select id="getPersonalNotifications" resultMap="notiRM">
+        select * from Notification
+        where n_toWhoId=#{studentId} order by n_time desc
+        limit #{offset},#{limit};
+    </select>
+
+    <select id="getNumOfUnReadFans" resultType="Integer">
+        select count(*) from Notification where n_toWhoId=#{studentId} and n_status=1;
+    </select>
+    <select id="getNumOfUnReadLikes" resultType="Integer">
+        select count(*) from Notification where n_toWhoId=#{studentId} and n_status=2;
+    </select>
+    <select id="getNumOfUnReadComments" resultType="Integer">
+        select count(*) from Notification where n_toWhoId=#{studentId} and n_status=3;
+    </select>
+    <select id="getNumOfUnReadDonates" resultType="Integer">
+        select count(*) from Notification where n_toWhoId=#{studentId} and n_status=4;
+    </select>
+    <select id="getNumOfUnReadWhispers" resultType="Integer">
+        select count(*) from Notification where n_toWhoId=#{studentId} and n_status=5;
+    </select>
+    <select id="getNumOfUnReadLeaveMsgs" resultType="Integer">
+        select count(*) from Notification where n_toWhoId=#{studentId} and n_status=6;
+    </select>
+</mapper>

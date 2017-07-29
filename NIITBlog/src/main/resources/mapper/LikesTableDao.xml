@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.LikesTableDao">
+    <select id="getNumOfLikers" resultType="Integer">
+        select count(*) from LikesTable where like_belikedId=#{articleId};
+    </select>
+    <select id="getLikers" resultType="entity.Student">
+        select s.s_id as studentId,s.s_name as name
+        from Student s,LikesTable lt
+        where s.s_id=lt.like_likerId and lt.like_belikedId=#{articleId};
+    </select>
+    <select id="getNumOfAllLikes" resultType="Integer">
+        select count(*) from LikesTable where like_belikedAuthor=#{studentId};
+    </select>
+    <select id="likeIt" resultType="Integer">
+        select count(*) from LikesTable where like_likerId=#{studentId} and like_belikedId=#{articleId};
+    </select>
+</mapper>

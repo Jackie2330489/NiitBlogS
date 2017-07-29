@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.DraftDao">
+    <resultMap id="draftRM" type="entity.Draft">
+        <id property="draftId" column="d_id"/>
+        <result property="studentId" column="d_stuId"/>
+        <result property="title" column="d_title"/>
+        <result property="draft" column="d_draft"/>
+        <result property="time" column="d_time"/>
+    </resultMap>
+
+    <select id="getDraftsByStudentId" resultMap="draftRM">
+        select
+        *
+        from Draft where d_stuId=#{studentId};
+    </select>
+</mapper>
+        <!--   <![CDATA[ <= ]]>   <= -->

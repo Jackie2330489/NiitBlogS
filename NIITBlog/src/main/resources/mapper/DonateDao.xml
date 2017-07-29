@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.DonateDao">
+    <select id="getNumOfDonators" resultType="Integer">
+        select count(distinct don_donatorId) from Donate where don_earnArticle=#{articleId};
+    </select>
+    <select id="getDonators" resultType="entity.Student">
+        select s.s_id as studentId,s.s_name as name
+        from Donate d,Student s
+        where d.don_earnArticle=#{articleId} and d.don_donatorId=s.s_id;
+    </select>
+    <select id="getSumOfDonation" resultType="Integer">
+        select sum(don_money) from Donate where don_earnArticle=#{articleId};
+    </select>
+    <select id="getDonateSum" resultType="Integer">
+        select sum(don_money) from Donate where don_donatorId=#{studentId};
+    </select>
+    <select id="getEarnsSum" resultType="Integer">
+        select sum(don_money) from Donate where don_earnerId=#{studentId};
+    </select>
+</mapper>

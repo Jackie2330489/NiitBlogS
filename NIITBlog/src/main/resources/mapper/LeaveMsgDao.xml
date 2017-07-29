@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.LeaveMsgDao">
+    <resultMap id="leaveMsgRM" type="entity.LeaveMsg">
+        <id column="l_id" property="lmId"/>
+        <result column="l_pageOwnerId" property="pageOwnerId"/>
+        <result column="l_fromWhoId" property="fromWhoId"/>
+        <result column="l_fromWhoName" property="fromWhoName"/>
+        <result column="l_toWhoId" property="toWhoId"/>
+        <result column="l_toWhoName" property="toWhoName"/>
+        <result column="l_msg" property="msg"/>
+        <result column="l_time" property="time"/>
+    </resultMap>
+    <select id="getNumOfLeaveMsgs" resultType="Integer">
+        select count(*) from LeaveMsg where l_pageOwnerId=#{studentId};
+    </select>
+    <select id="getLeaveMsgs" resultMap="leaveMsgRM">
+        select * from LeaveMsg where l_pageOwnerId=#{studentId};
+    </select>
+</mapper>

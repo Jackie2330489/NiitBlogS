@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.TagDao">
+    <resultMap id="tagResultMap" type="entity.Tag">
+        <id column="ta_id" property="tarticleId"/>
+        <id column="t_name" property="tagName"/>
+    </resultMap>
+    <select id="getTagsByArticleId" resultMap="tagResultMap">
+        select
+        *
+        from Tag where ta_id=#{articleId};
+    </select>
+    <insert id="addTag">
+        insert igonre into Tag(ta_id,ta_name) values(#{articleId},#{tagName});
+    </insert>
+</mapper>
+        <!--   <![CDATA[ <= ]]>   <= -->

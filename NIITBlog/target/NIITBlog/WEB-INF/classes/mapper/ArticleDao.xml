@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.ArticleDao">
+    <resultMap id="articleRM" type="entity.Article">
+        <id column="a_id" property="articleId"/>
+        <result column="a_authorId" property="authorId"/>
+        <result column="a_authorName" property="authorName"/>
+        <result column="a_title" property="title"/>
+        <result column="a_body" property="body"/>
+        <result column="a_status" property="status"/>
+        <result column="a_published" property="published"/>
+        <result column="a_lastModify" property="lastModify"/>
+        <association property="likes" column="a_id" select="dao.LikesTableDao.getNumOfLikers"/>
+        <association property="likers" column="a_id" select="dao.LikesTableDao.getLikers"/>
+        <association property="donatorNum" column="a_id" select="dao.DonateDao.getNumOfDonators"/>
+        <association property="donators" column="a_id" select="dao.DonateDao.getDonators"/>
+        <association property="donateSum" column="a_id" select="dao.DonateDao.getSumOfDonation"/>
+        <association property="tags" column="a_id" select="dao.TagDao.getTagsByArticleId"/>
+        <association property="commentNum" column="a_id" select="dao.CommentDao.getNumOfComments"/>
+        <association property="comments" column="a_id" select="dao.CommentDao.getComments"/>
+        <association property="articleFiles" column="a_id" select="dao.ArticleFileDao.getArticleFiles"/>
+    </resultMap>
+    <resultMap id="simpleArticleRM" type="entity.Article">
+        <id column="a_id" property="articleId"/>
+        <result column="a_authorId" property="authorId"/>
+        <result column="a_authorName" property="authorName"/>
+        <result column="a_title" property="title"/>
+        <result column="a_body" property="body"/>
+        <result column="a_status" property="status"/>
+        <result column="a_published" property="published"/>
+        <result column="a_lastModify" property="lastModify"/>
+        <association property="likes" column="a_id" select="dao.LikesTableDao.getNumOfLikers"/>
+        <association property="donatorNum" column="a_id" select="dao.DonateDao.getNumOfDonators"/>
+        <association property="donateSum" column="a_id" select="dao.DonateDao.getSumOfDonation"/>
+        <association property="tags" column="a_id" select="dao.TagDao.getTagsByArticleId"/>
+        <association property="commentNum" column="a_id" select="dao.CommentDao.getNumOfComments"/>
+    </resultMap>
+
+    <select id="getArticleById" resultMap="articleRM">
+        select * from Article where a_id=#{articleId};
+    </select>
+
+    <select id="getNumOfArticles" resultType="Integer">
+        select count(*) from Article where a_authorId=#{studentId};
+    </select>
+
+    <select id="getArticlesByStudentId" resultMap="simpleArticleRM">
+        select *
+        from Article where a_authorId=#{studentId};
+    </select>
+
+    <select id="getHotArticles" resultMap="simpleArticleRM">
+        select * from Article a,HotArticle ha where a.a_id=ha.ha_articleId;
+    </select>
+
+    <select id="getArticlesByLimit" resultMap="simpleArticleRM">
+        select * from Article order by a_lastModify desc limit #{offset},#{limit};
+    </select>
+
+    <select id="getArticlesAll" resultMap="simpleArticleRM">
+        select * from Article where a_lastModify<![CDATA[ < ]]>#{lastArticleDate} order by a_lastModify desc limit 0,6;
+    </select>
+
+    <select id="getNumNewArticles" resultType="Integer">
+        select count(*) from Article where a_modify<![CDATA[ > ]]>#{firstArticleDate} order by a_lastModify desc;
+    </select>
+
+    <select id="getNewArtilesAll" resultMap="simpleArticleRM">
+        select * from Article where a_modify<![CDATA[ > ]]>#{firstArticleDate} order by a_lastModify desc;
+    </select>
+
+    <select id="getNumOfNewFollow" resultType="Integer">
+        select count(*) from Article a,Follows f where f.f_fromWhoId=#{studentId} and f.f_toWhoId=a.a_authorId and a_modify<![CDATA[ > ]]>#{firstArticleDate} order by a_lastModify desc;
+    </select>
+
+    <select id="getNewArticlesFollow" resultMap="simpleArticleRM">
+        select * from Article a,Follows f where f.f_fromWhoId=#{studentId} and f.f_toWhoId=a.a_authorId and a_modify<![CDATA[ > ]]>#{firstArticleDate} order by a_lastModify desc;
+    </select>
+
+    <insert id="addArticle">
+        insert into Article(a_authorId,a_authorName,a_title,a_body) values(#{authorId},(select s_name from Student where s_id=#{authorId}),#{title},#{body});
+    </insert>
+
+    <update id="updateArticleDelStatus">
+        update Article set a_status=0 where a_id=#{articleId};
+    </update>
+</mapper>
+   <!--<![CDATA[ <= ]]>   <=-->

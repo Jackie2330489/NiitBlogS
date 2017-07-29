@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.ArticleFileDao">
+    <resultMap id="afRM" type="entity.ArticleFile">
+        <id column="af_id" property="afId"/>
+        <result column="af_articleId" property="articleId"/>
+        <result column="af_storeName" property="storeName"/>
+        <result column="af_realName" property="realName"/>
+        <result column="af_contentType" property="contentType"/>
+    </resultMap>
+    <select id="getArticleFiles" resultMap="afRM">
+        select * from ArticleFile where af_articleId=#{articleId};
+    </select>
+</mapper>
